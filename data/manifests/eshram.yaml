@@ -1,0 +1,51 @@
+# LABREX Data Acquisition Manifest: e-Shram
+manifest_version: "2.0.0"
+source_id: "SRC-ESHRAM-AGG"
+dataset_name: "e-Shram Unorganized Worker Dashboard Aggregates"
+authority: "Ministry of Labour & Employment (MoLE)"
+dataset_type: "REAL"
+official_url: "https://eshram.gov.in/eshramportal/publicDashboard"
+alternate_url: "https://labour.gov.in/"
+retrieval_date: "2026-10-20"
+publication_version: "ESHRAM-DASHBOARD-AGGREGATES"
+expected_format: "CSV"
+alternate_formats:
+  - "XLSX"
+  - "JSON"
+acquisition_targets:
+  district_aggregates:
+    title: "District & State Cumulative Worker Registrations"
+    description: "Public aggregate counts by state, district, broad occupation/sector, and gender ratio"
+    scope: "DISTRICT_STATE_AGGREGATES_ONLY"
+    filename_patterns:
+      - "eshram_district_aggregates_*.*"
+      - "eshram_state_district_*.*"
+      - "*eshram*aggregate*.*"
+      - "*eshram*district*.*"
+parser: "backend.app.services.data.adapters.eshram_adapter.EShramAdapter"
+parser_version: "1.0.0"
+destination:
+  bronze_table: "stg_raw_eshram_aggregates"
+  silver_table: "clean_unorganized_workforce"
+  gold_fact: "fact_workforce_stock"
+geographic_granularity: "DISTRICT"
+temporal_granularity: "MONTHLY_SNAPSHOT"
+pii_level: "ZERO_TOLERANCE"
+privacy_guard:
+  forbid_aadhaar: true
+  forbid_worker_names: true
+  forbid_mobile_numbers: true
+  forbid_bank_accounts: true
+  require_aggregate_only: true
+target_attributes:
+  - "snapshot_date"
+  - "state_id"
+  - "district_id"
+  - "sector_or_occupation"
+  - "worker_count"
+  - "gender_distribution"
+validation_rules:
+  - "worker_count_positive: count >= 0"
+  - "valid_district_id: true"
+  - "pii_guard_clean: true"
+max_file_size_bytes: 52428800 # 50 MB

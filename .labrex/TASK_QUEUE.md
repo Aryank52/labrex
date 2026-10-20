@@ -152,3 +152,138 @@
 - **RISK**: Low
 - **ESTIMATED COMPLEXITY**: Small
 - **STATUS**: READY
+
+---
+
+### TASK-DATA-001
+- **TASK-ID**: TASK-DATA-001
+- **TITLE**: Data Source Registry & Download Manifests
+- **DOMAIN**: Data Engineering / Governance
+- **DEPENDENCIES**: None
+- **DESCRIPTION**: Author docs/DATA_SOURCE_REGISTRY.md with 14 fields per source and create 7 YAML manifests in data/manifests/.
+- **FILES**: `docs/DATA_SOURCE_REGISTRY.md`, `data/manifests/*.yaml`
+- **ACCEPTANCE**: All 7 core sources (NCO, PLFS, NCS, e-Shram, PMKVY, NSDC, Geography) cataloged with verified access modes.
+- **TEST COMMANDS**: YAML schema load check.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-DATA-002
+- **TASK-ID**: TASK-DATA-002
+- **TITLE**: Canonical Staging Contracts & Medallion Ingestion Architecture
+- **DOMAIN**: Data Engineering / Schemas
+- **DEPENDENCIES**: TASK-DATA-001
+- **DESCRIPTION**: Implement decoupled Pydantic v2 staging models in backend/app/schemas/staging.py and document pipeline in docs/DATA_PIPELINE.md.
+- **FILES**: `backend/app/schemas/staging.py`, `docs/DATA_PIPELINE.md`
+- **ACCEPTANCE**: All canonical signals (Observation, Occupation, Skill, Training, Workforce) defined with strict typing.
+- **TEST COMMANDS**: `pytest backend/tests/unit/test_canonical_staging.py`
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-DATA-003
+- **TASK-ID**: TASK-DATA-003
+- **TITLE**: Automated Data Quality Framework & Cryptographic Lineage Engine
+- **DOMAIN**: Data Governance & Quality
+- **DEPENDENCIES**: TASK-DATA-002
+- **DESCRIPTION**: Implement DataQualityEngine with 8 validation rules, penalty scoring (0-100), and IngestionLineage SHA-256 tracker.
+- **FILES**: `backend/app/services/data/quality/`, `backend/app/services/data/lineage/`, `docs/DATA_QUALITY.md`, `docs/DATA_LINEAGE.md`
+- **ACCEPTANCE**: Automated validation of missing dates, invalid geo, duplicates, negative counts, NCO regex, PII leakage, staleness.
+- **TEST COMMANDS**: `pytest backend/tests/unit/test_data_quality.py`, `pytest backend/tests/unit/test_data_lineage.py`
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: High
+- **STATUS**: DONE
+
+---
+
+### TASK-DATA-004
+- **TASK-ID**: TASK-DATA-004
+- **TITLE**: Ingestion Parsers & Adapters for Official Datasets
+- **DOMAIN**: Data Engineering / Adapters
+- **DEPENDENCIES**: TASK-DATA-003
+- **DESCRIPTION**: Build adapters for NCO, PLFS, e-Shram (PII guarded), PMKVY (stream split), NSDC, NCS (4 connection states), and Geography (Shapely + EPSG:4326).
+- **FILES**: `backend/app/services/data/parsers/`, `backend/app/services/data/adapters/`
+- **ACCEPTANCE**: All parsers normalize raw inputs into canonical contracts without data loss or unauthorized scraping.
+- **TEST COMMANDS**: `pytest backend/tests/unit/test_data_adapters.py`
+- **RISK**: Medium
+- **ESTIMATED COMPLEXITY**: High
+- **STATUS**: DONE
+
+---
+
+### TASK-DATA-005
+- **TASK-ID**: TASK-DATA-005
+- **TITLE**: Deterministic Test Fixtures & Unit Test Verification Suite
+- **DOMAIN**: QA / Automation
+- **DEPENDENCIES**: TASK-DATA-004
+- **DESCRIPTION**: Create deterministic test fixtures in data/fixtures/ tagged with dataset_type=FIXTURE and verify with 27 unit tests.
+- **FILES**: `data/fixtures/*.json`, `data/fixtures/*.geojson`, `backend/tests/unit/test_*.py`
+- **ACCEPTANCE**: 100% test pass rate with zero secret leaks.
+- **TEST COMMANDS**: `pytest backend/tests/`, `python scripts/secret_guard.py`
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-DATA-006
+- **TASK-ID**: TASK-DATA-006
+- **TITLE**: Ingestion Implementation Roadmap & Operator Download Guide
+- **DOMAIN**: Documentation / Operations
+- **DEPENDENCIES**: TASK-DATA-005
+- **DESCRIPTION**: Author docs/DATA_DOWNLOAD_GUIDE.md and docs/INGESTION_ROADMAP.md covering pre-ingestion checks and post-Phase 3 migration.
+- **FILES**: `docs/DATA_DOWNLOAD_GUIDE.md`, `docs/INGESTION_ROADMAP.md`
+- **ACCEPTANCE**: Clear, auditable operator manual for downloading and staging official datasets.
+- **TEST COMMANDS**: Markdown inspection.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Small
+- **STATUS**: DONE
+
+---
+
+### TASK-DATA-007
+- **TASK-ID**: TASK-DATA-007
+- **TITLE**: Manifest Target Harmonization & Download Checklist Expansion
+- **DOMAIN**: Data Acquisition / Specification
+- **DEPENDENCIES**: TASK-DATA-006
+- **DESCRIPTION**: Update data/manifests/*.yaml to version 2.0.0 with exact acquisition targets (NCO Vol I/II-B, Geo boundaries, PLFS 5 rounds, PMKVY 4 series, e-Shram aggregates, NCS vacancies, NSDC directory) and expand docs/DATA_DOWNLOAD_GUIDE.md and docs/DATA_ACQUISITION_STATUS.md.
+- **FILES**: `data/manifests/*.yaml`, `docs/DATA_DOWNLOAD_GUIDE.md`, `docs/DATA_ACQUISITION_STATUS.md`
+- **ACCEPTANCE**: All manifests and checklists explicitly enumerate exact target files, formats, login requirements, and URLs.
+- **TEST COMMANDS**: Manifest load inspection.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-DATA-008
+- **TASK-ID**: TASK-DATA-008
+- **TITLE**: Raw File Registration Tool & Pre-Ingestion Validator CLI
+- **DOMAIN**: Data Tooling / Quality Gate
+- **DEPENDENCIES**: TASK-DATA-007
+- **DESCRIPTION**: Implement python -m labrex.data.register_file and python -m labrex.data.validate_raw for offline file identification, SHA-256 calculation, manifest matching, PII safety checks, and schema validation.
+- **FILES**: `labrex/data/register_file.py`, `labrex/data/validate_raw.py`, `backend/app/services/data/registration.py`, `backend/app/services/data/raw_validator.py`, `backend/tests/unit/test_raw_validation.py`
+- **ACCEPTANCE**: Automated CLI tools operate locally without network transmission, correctly detect unexpected files and PII leaks, 35 tests passing.
+- **TEST COMMANDS**: `pytest backend/tests/`, `python -m labrex.data.validate_raw`
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-011
+- **TASK-ID**: TASK-011
+- **TITLE**: Phase 3 Database Foundation & Migration Architecture
+- **DOMAIN**: Database & Platform Engineering
+- **DEPENDENCIES**: TASK-010, TASK-DATA-008
+- **DESCRIPTION**: Set up root Alembic migration environment, configure async env.py, create initial schema migration for 36 tables with PostGIS extensions, SRID 4326 geometries, constraints, indexes, idempotent seed framework, and automated PowerShell db_ops CLI.
+- **FILES**: `alembic.ini`, `alembic/env.py`, `alembic/versions/20261020_0001_initial_schema.py`, `backend/app/models/*.py`, `backend/app/services/data/seed_framework.py`, `scripts/db_ops.ps1`, `docs/DATABASE_OPERATIONS.md`, `docs/PHASE3_DATABASE_VERIFICATION.md`
+- **ACCEPTANCE**: Alembic environment functional, 36 normalized tables defined in Base.metadata, idempotent seed with zero row duplication, 35/35 pytest tests pass, secret guard clean.
+- **TEST COMMANDS**: `pytest backend/tests/ -v`, `python scripts/secret_guard.py`
+- **RISK**: Medium
+- **ESTIMATED COMPLEXITY**: High
+- **STATUS**: DONE

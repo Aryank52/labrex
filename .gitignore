@@ -61,5 +61,9 @@ Thumbs.db
 # Database dumps & big files
 *.sqlite3
 *.dump
-data/raw/*
-!data/raw/.gitkeep
+
+# Raw data files (never commit large raw source data; preserve READMEs & .gitkeep)
+data/raw/**
+!data/raw/**/
+!data/raw/**/*.md
+!data/raw/**/.gitkeep

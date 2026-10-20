@@ -1,8 +1,9 @@
 # LABREX Data Lineage & Provenance Architecture
 
-**Document Version:** 1.0  
-**Authority:** Master Directive Section 13, 47 & 79  
-**Standard:** Every metric displayed on the dashboard must be traceable to its origin.  
+**Document Version:** 2.0  
+**Authority:** Master Directive Section 13, 47, 79 & Secondary Mandate Step 13  
+**Standard:** Every metric displayed on the platform is cryptographically traceable to its raw source batch.  
+**Compliance Standard:** ISO/IEC 25012 Data Quality & W3C PROV-O Standard.
 
 ---
 
@@ -10,38 +11,40 @@
 
 ```mermaid
 graph LR
-    subgraph Raw_Batch["Raw Source Layer"]
-        R1["SRC-NCO-2015<br/>(Gazette v1.0)"]
-        R2["SRC-DGT-ITI<br/>(Batch 2025-10)"]
-        R3["SRC-FIXTURE-IND<br/>(Seed 42)"]
+    subgraph Raw_Batch["Raw Source Layer (Layer 0)"]
+        R1["SRC-NCO-2015<br/>(Gazette v1.0, SHA-256)"]
+        R2["SRC-PLFS-ANN<br/>(MoSPI 2023-24, SHA-256)"]
+        R3["SRC-PMKVY-OUT<br/>(MSDE SIDH, SHA-256)"]
+        R4["SRC-FIXTURE-IND<br/>(Deterministic Seed)"]
     end
 
-    subgraph ETL["Transformation Layer"]
-        T1["pipeline_ontology_map_v1<br/>(Git: a1b2c3d)"]
-        T2["pipeline_cleanse_dedupe_v1<br/>(Git: a1b2c3d)"]
+    subgraph Adapters["Parser & Lineage Layer"]
+        T1["NCOParser (v1.0.0)<br/>Signature: HMAC-SHA256"]
+        T2["PLFSAdapter (v1.0.0)<br/>Signature: HMAC-SHA256"]
+        T3["PMKVYAdapter (v1.0.0)<br/>Signature: HMAC-SHA256"]
     end
 
-    subgraph Gold["Dimensional Store"]
+    subgraph Gold["Dimensional Store (PostgreSQL)"]
         D1["dim_occupation<br/>(NCO: 7421.0300)"]
         D2["dim_district<br/>(IN-MH-PUN)"]
-        F1["fact_job_demand<br/>(Period: 2025-Q4)"]
-        F2["fact_training_capacity<br/>(Period: 2025-Q4)"]
+        F1["fact_job_demand<br/>(Batch: BAT-NCS-001)"]
+        F2["fact_training_capacity<br/>(Batch: BAT-PMKVY-001)"]
     end
 
     subgraph Modeling["Feature & Model Layer"]
         M1["feat_demand_lags_v1"]
-        M2["model_lgbm_demand_v1<br/>(Registry ID: REG-092)"]
+        M2["model_lgbm_demand_v1<br/>(Registry: REG-092)"]
     end
 
-    subgraph Serving["Serving & Recommendations"]
-        S1["forecast_demand<br/>(Estimate: 2,650)"]
-        S2["skill_gap<br/>(Gap: 1,450)"]
-        S3["opt_recommendation<br/>(Action: +240 seats)"]
+    subgraph Serving["Serving & Policy Intelligence"]
+        S1["forecast_demand<br/>(Point + 80% & 95% Intervals)"]
+        S2["skill_gap<br/>(Net Deficit & Risk RADAR)"]
+        S3["opt_recommendation<br/>(OR-Tools MILP Allocation)"]
     end
 
     R1 --> T1 --> D1
-    R2 --> T2 --> F2
-    R3 --> T2 --> F1
+    R2 --> T2 --> F1
+    R3 --> T3 --> F2
     D1 --> F1
     D2 --> F1
     F1 --> M1 --> M2 --> S1
@@ -51,9 +54,34 @@ graph LR
 
 ---
 
-## 2. Lineage Metadata Attributes
+## 2. Ingestion Lineage Contract (`IngestionLineage`)
 
-Every data entity in the serving tier exposes a `get_lineage()` metadata payload:
+Every batch ingested through `backend/app/services/data/` creates an immutable `IngestionLineage` record:
+
+```python
+class IngestionLineage(BaseModel):
+    source_id: str             # e.g. 'SRC-PLFS-ANN', 'SRC-PMKVY-OUT'
+    dataset_name: str          # Official dataset name
+    dataset_version: str       # e.g. 'PLFS-2023-24', 'PMKVY-4.0'
+    parser_name: str           # e.g. 'PLFSAdapter'
+    parser_version: str        # e.g. '1.0.0'
+    retrieved_at: datetime     # UTC timestamp
+    file_path: Optional[str]   # Relative path in data/raw/
+    file_sha256: Optional[str] # Streaming SHA-256 digest of source file
+    batch_id: str              # Unique UUIDv4 batch ID
+    lineage_signature: str     # Cryptographic provenance signature
+```
+
+### 2.1 Cryptographic Signature Formulation
+The lineage signature guarantees batch authenticity and prevents silent tampering:
+
+$$\text{LineageSignature} = \text{SHA-256}\left(\text{source\_id} \parallel \text{dataset\_version} \parallel \text{batch\_id} \parallel \text{file\_sha256}\right)$$
+
+---
+
+## 3. Serving-Layer Provenance Payload
+
+Every entity in the API response exposes an auditable provenance structure:
 
 ```json
 {
@@ -63,14 +91,14 @@ Every data entity in the serving tier exposes a `get_lineage()` metadata payload
   "provenance": {
     "demand_forecast": {
       "model_id": "REG-LGBM-DEMAND-V1",
-      "model_run_id": "run-8f3a1-...",
+      "model_run_id": "run-8f3a1-94bc-45",
       "training_dataset_version": "GOLD_2025_Q3",
       "algorithm": "LightGBM Regressor (Tuned Lags)",
       "validation_wape": 0.089
     },
     "supply_forecast": {
       "source_tables": ["fact_training_capacity", "fact_training_outcomes"],
-      "batch_ids": ["BAT-DGT-2025-10"],
+      "batch_ids": ["BAT-PMKVY-2024-Q3"],
       "effective_pipeline_discount": 0.85
     },
     "ontology_mappings": {
@@ -78,6 +106,7 @@ Every data entity in the serving tier exposes a `get_lineage()` metadata payload
       "nco_code": "7421.0300",
       "mapping_method": "DETERMINISTIC_EXACT_MATCH"
     },
+    "lineage_signature": "8f3e2b9c71a...",
     "calculation_timestamp": "2026-10-20T10:30:00Z"
   }
 }
@@ -85,8 +114,8 @@ Every data entity in the serving tier exposes a `get_lineage()` metadata payload
 
 ---
 
-## 3. Immutability & Traceability Invariants
+## 4. Immutability & Traceability Invariants
 
-1. **Append-Only Historical Ingestion**: Fact tables are strictly append-only. Reprocessed data creates new versions with incremented `batch_id` without destructive overwrite.
+1. **Append-Only Staging**: Raw records and bronze payloads are never overwritten or mutated in place. New runs receive an incremented `batch_id`.
 2. **Deterministic Reproducibility**: Given a model version, feature pipeline version, and source batch ID, the exact forecast point estimates and intervals can be reproduced identically.
-3. **Data Quality Attestation**: Datasets with a quality score < 70 receive an explicit discount in the confidence engine, propagating to wider forecast uncertainty bands.
+3. **Quality-Driven Confidence Discounting**: Batches receiving a Data Quality Score $< 85$ carry explicit confidence penalties that widen forecast prediction intervals.

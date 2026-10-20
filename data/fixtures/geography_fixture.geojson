@@ -1,0 +1,102 @@
+{
+  "type": "FeatureCollection",
+  "name": "labrex_geography_fixture",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "state_code": "IN-MH",
+        "state_name": "Maharashtra",
+        "census_code": "27",
+        "dataset_type": "FIXTURE",
+        "note": "FIXTURE: Deterministic bounding polygon for testing GIS parser and PostGIS staging"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [72.6, 15.6],
+            [80.9, 15.6],
+            [80.9, 22.0],
+            [72.6, 22.0],
+            [72.6, 15.6]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state_code": "IN-KA",
+        "state_name": "Karnataka",
+        "census_code": "29",
+        "dataset_type": "FIXTURE",
+        "note": "FIXTURE: Deterministic bounding polygon for testing GIS parser and PostGIS staging"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.0, 11.5],
+            [78.6, 11.5],
+            [78.6, 18.4],
+            [74.0, 18.4],
+            [74.0, 11.5]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "district_code": "IN-MH-PUN",
+        "district_name": "Pune",
+        "state_code": "IN-MH",
+        "census_code": "521",
+        "dataset_type": "FIXTURE",
+        "note": "FIXTURE: Deterministic district polygon within Maharashtra boundary"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.3, 18.0],
+            [75.1, 18.0],
+            [75.1, 19.4],
+            [73.3, 19.4],
+            [73.3, 18.0]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "district_code": "IN-KA-BLU",
+        "district_name": "Bengaluru Urban",
+        "state_code": "IN-KA",
+        "census_code": "572",
+        "dataset_type": "FIXTURE",
+        "note": "FIXTURE: Deterministic district polygon within Karnataka boundary"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.4, 12.8],
+            [77.8, 12.8],
+            [77.8, 13.2],
+            [77.4, 13.2],
+            [77.4, 12.8]
+          ]
+        ]
+      }
+    }
+  ]
+}

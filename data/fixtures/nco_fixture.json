@@ -1,0 +1,47 @@
+[
+  {
+    "nco_code": "7421.0300",
+    "title": "Solar PV Installation Technician",
+    "description": "Installs, tests and commissions solar photovoltaic systems including mounting panels and inverter integration.",
+    "sector": "SEC-RENEWABLE-ENERGY",
+    "isco_08": "7421",
+    "source_version": "NCO-2015-FIXTURE",
+    "dataset_type": "FIXTURE"
+  },
+  {
+    "nco_code": "7231.0100",
+    "title": "Motor Vehicle Mechanic",
+    "description": "Repairs, overhauls and services automobiles, light transport vehicles and commercial vehicles.",
+    "sector": "SEC-AUTOMOTIVE",
+    "isco_08": "7231",
+    "source_version": "NCO-2015-FIXTURE",
+    "dataset_type": "FIXTURE"
+  },
+  {
+    "nco_code": "2512.0100",
+    "title": "Software Developer",
+    "description": "Researches, analyzes and evaluates requirements for software applications and systems development.",
+    "sector": "SEC-IT-ITES",
+    "isco_08": "2512",
+    "source_version": "NCO-2015-FIXTURE",
+    "dataset_type": "FIXTURE"
+  },
+  {
+    "nco_code": "8322.0100",
+    "title": "Commercial Vehicle Driver",
+    "description": "Drives and tends light or heavy commercial motor vehicles to transport goods and cargo safely.",
+    "sector": "SEC-LOGISTICS",
+    "isco_08": "8322",
+    "source_version": "NCO-2015-FIXTURE",
+    "dataset_type": "FIXTURE"
+  },
+  {
+    "nco_code": "7112.0200",
+    "title": "Construction Mason",
+    "description": "Lays building materials such as brick, structural tile and concrete blocks to construct or repair walls.",
+    "sector": "SEC-CONSTRUCTION",
+    "isco_08": "7112",
+    "source_version": "NCO-2015-FIXTURE",
+    "dataset_type": "FIXTURE"
+  }
+]

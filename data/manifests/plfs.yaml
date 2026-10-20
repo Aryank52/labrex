@@ -1,0 +1,74 @@
+# LABREX Data Acquisition Manifest: PLFS
+manifest_version: "2.0.0"
+source_id: "SRC-PLFS-ANN"
+dataset_name: "Periodic Labour Force Survey (PLFS)"
+authority: "Ministry of Statistics and Programme Implementation (MoSPI), NSSO"
+dataset_type: "REAL"
+official_url: "https://microdata.gov.in/mop/"
+alternate_url: "https://www.mospi.gov.in/"
+retrieval_date: "2026-10-20"
+publication_version: "PLFS-MULTI-ROUND-2019-2024"
+expected_format: "CSV"
+alternate_formats:
+  - "XLSX"
+  - "TXT"
+  - "PDF"
+survey_rounds:
+  - "2019-20"
+  - "2020-21"
+  - "2021-22"
+  - "2022-23"
+  - "2023-24"
+required_artifacts_per_round:
+  main_data:
+    description: "Primary microdata or indicator statement files (e.g. household, person, statement tables)"
+    filename_patterns:
+      - "*data*.*"
+      - "*statement*.*"
+      - "*indicator*.*"
+      - "*person*.*"
+  data_layout:
+    description: "Variable layouts, column positions, widths, and data dictionary"
+    filename_patterns:
+      - "*layout*.*"
+      - "*dictionary*.*"
+      - "*codebook*.*"
+  district_code_reference:
+    description: "Official NSS/Census district code concordances for the round"
+    filename_patterns:
+      - "*district*code*.*"
+      - "*district*.*"
+      - "*nss*district*.*"
+  readme:
+    description: "Official survey documentation, release notes, and field instructions"
+    filename_patterns:
+      - "*readme*.*"
+      - "*note*.*"
+      - "*instructions*.*"
+  estimation_procedure:
+    description: "Sampling weights, multipliers, and estimation formulas applied by NSSO"
+    filename_patterns:
+      - "*estimation*.*"
+      - "*multiplier*.*"
+      - "*weight*.*"
+      - "*procedure*.*"
+parser: "backend.app.services.data.adapters.plfs_adapter.PLFSAdapter"
+parser_version: "1.0.0"
+destination:
+  bronze_table: "stg_raw_plfs_records"
+  silver_table: "clean_labour_force_indicators"
+  gold_fact: "fact_workforce_indicators"
+geographic_granularity: "STATE_AND_NATIONAL"
+temporal_granularity: "ANNUAL_AND_QUARTERLY"
+pii_level: "NONE"
+minimal_indicators:
+  - "LFPR"  # Labour Force Participation Rate (%)
+  - "WPR"   # Worker Population Ratio (%)
+  - "UR"    # Unemployment Rate (%)
+  - "BROAD_INDUSTRY_DISTRIBUTION" # Agriculture, Secondary, Tertiary (%)
+  - "SECTOR_RURAL_URBAN"
+validation_rules:
+  - "rate_bounds: 0.0 <= value <= 100.0"
+  - "valid_state_id: true"
+  - "non_empty_period: true"
+max_file_size_bytes: 524288000 # 500 MB per round extract

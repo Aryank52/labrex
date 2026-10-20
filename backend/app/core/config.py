@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field
+from pydantic import Field, field_validator
 from typing import List
+import urllib.parse
 
 
 class Settings(BaseSettings):
@@ -26,6 +27,47 @@ class Settings(BaseSettings):
     DB_POOL_SIZE: int = Field(default=10)
     DB_MAX_OVERFLOW: int = Field(default=20)
     DB_POOL_TIMEOUT: int = Field(default=30)
+
+    @field_validator("DATABASE_URL", mode="after")
+    @classmethod
+    def sanitize_database_url(cls, v: str) -> str:
+        """Sanitize and ensure special characters in userinfo are URL-encoded."""
+        if not v or "://" not in v:
+            return v
+        scheme, sep, rest = v.partition("://")
+        path_start = rest.find("/")
+        if path_start != -1:
+            authority = rest[:path_start]
+            path_and_query = rest[path_start:]
+        else:
+            authority = rest
+            path_and_query = ""
+
+        if "@" not in authority:
+            return v
+
+        userinfo, _, host_port = authority.rpartition("@")
+        if not userinfo:
+            return v
+
+        user, colon, password = userinfo.partition(":")
+        safe_user = urllib.parse.quote_plus(urllib.parse.unquote(user))
+        if colon:
+            safe_pass = urllib.parse.quote_plus(urllib.parse.unquote(password))
+            new_authority = f"{safe_user}:{safe_pass}@{host_port}"
+        else:
+            new_authority = f"{safe_user}@{host_port}"
+        return f"{scheme}://{new_authority}{path_and_query}"
+
+    @property
+    def sync_database_url(self) -> str:
+        """Synchronous database URL for tools or offline migrations."""
+        url = self.DATABASE_URL
+        if url.startswith("postgresql+asyncpg://"):
+            return url.replace("postgresql+asyncpg://", "postgresql+psycopg2://", 1)
+        elif url.startswith("postgresql://"):
+            return url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        return url
 
     # Security & Authentication
     JWT_SECRET_KEY: str = Field(

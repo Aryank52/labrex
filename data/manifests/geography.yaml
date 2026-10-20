@@ -1,0 +1,50 @@
+# LABREX Data Acquisition Manifest: Administrative Boundaries
+manifest_version: "2.0.0"
+source_id: "SRC-GEO-ADMIN"
+dataset_name: "Official Administrative Boundaries of India (State & District)"
+authority: "Survey of India (SOI) & Ministry of Panchayati Raj (Local Government Directory - LGD)"
+dataset_type: "REAL"
+official_url: "https://onlinemaps.surveyofindia.gov.in/"
+alternate_url: "https://lgdirectory.gov.in/"
+retrieval_date: "2026-10-20"
+publication_version: "SOI-LGD-2024-ADMIN"
+expected_format: "GeoJSON"
+alternate_formats:
+  - "Shapefile"
+  - "TopoJSON"
+acquisition_targets:
+  state_boundaries:
+    title: "Official State & Union Territory Boundaries"
+    expected_count: 36
+    filename_patterns:
+      - "india_states.*"
+      - "state_boundaries.*"
+      - "ind_states.*"
+    srid: 4326
+    expected_type: "STATE_BOUNDARY"
+  district_boundaries:
+    title: "Official District Boundaries"
+    expected_count_range: "700-800"
+    filename_patterns:
+      - "india_districts.*"
+      - "district_boundaries.*"
+      - "ind_districts.*"
+    srid: 4326
+    expected_type: "DISTRICT_BOUNDARY"
+parser: "backend.app.services.data.parsers.geography_parser.GeographyParser"
+parser_version: "1.0.0"
+destination:
+  bronze_table: "stg_raw_geography_polygons"
+  silver_table: "clean_administrative_geometries"
+  gold_dimensions:
+    - "dim_state"
+    - "dim_district"
+geographic_granularity: "NATIONAL_STATE_DISTRICT"
+temporal_granularity: "2024_GAZETTE"
+pii_level: "NONE"
+validation_rules:
+  - "valid_srid: 4326"
+  - "valid_geometry: shapely.is_valid(geom)"
+  - "india_bounding_box: 6.0 <= min_lat and max_lat <= 38.0 and 68.0 <= min_lon and max_lon <= 98.0"
+  - "state_district_referential_integrity: true"
+max_file_size_bytes: 104857600 # 100 MB
