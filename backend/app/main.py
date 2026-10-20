@@ -97,6 +97,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 
 # Mount API Routers
+app.include_router(health_router, prefix="")
 app.include_router(health_router, prefix=settings.API_V1_PREFIX)
 
 

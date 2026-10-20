@@ -1,0 +1,73 @@
+# LABREX Data Acquisition Manifest: PMKVY
+manifest_version: "2.0.0"
+source_id: "SRC-PMKVY-OUT"
+dataset_name: "PMKVY Skilling Outcomes & Infrastructure Capacity"
+authority: "Ministry of Skill Development and Entrepreneurship (MSDE) & NSDC"
+dataset_type: "REAL"
+official_url: "https://www.pmkvyofficial.org/"
+alternate_url: "https://www.skillindiadigital.gov.in/"
+retrieval_date: "2026-10-20"
+publication_version: "PMKVY-MULTI-YEAR-TARGETS"
+expected_format: "CSV"
+alternate_formats:
+  - "XLSX"
+  - "PDF"
+acquisition_targets:
+  trained_candidates:
+    title: "Trained Candidates Outcomes"
+    target_periods:
+      - "2021-22"
+      - "2022-23"
+      - "2023-24"
+    stream_type: "CERTIFIED_SUPPLY"
+    filename_patterns:
+      - "*trained*.*"
+      - "*pmkvy*trained*.*"
+  enrolled_candidates:
+    title: "Enrolled Candidates Pipeline"
+    target_periods:
+      - "2022-23"
+      - "2023-24"
+      - "2024-25"
+    stream_type: "TRAINING_PIPELINE"
+    filename_patterns:
+      - "*enrolled*.*"
+      - "*pmkvy*enrolled*.*"
+  certified_candidates:
+    title: "Certified Candidates Supply"
+    target_periods:
+      - "2022-23"
+      - "2023-24"
+      - "2024-25"
+    stream_type: "CERTIFIED_SUPPLY"
+    filename_patterns:
+      - "*certified*.*"
+      - "*pmkvy*certified*.*"
+  training_centres:
+    title: "Accredited Training Centres & Capacity"
+    target_periods:
+      - "2022-23"
+      - "2023-24"
+      - "2024-25"
+    stream_type: "INFRASTRUCTURE_CAPACITY"
+    filename_patterns:
+      - "*centres*.*"
+      - "*centers*.*"
+      - "*pmkvy*centres*.*"
+      - "*capacity*.*"
+parser: "backend.app.services.data.adapters.pmkvy_adapter.PMKVYAdapter"
+parser_version: "1.0.0"
+destination:
+  bronze_table: "stg_raw_pmkvy_records"
+  silver_table: "clean_skilling_outcomes"
+  gold_facts:
+    - "fact_training_capacity"
+    - "fact_training_outcomes"
+geographic_granularity: "DISTRICT"
+temporal_granularity: "FINANCIAL_YEAR"
+pii_level: "NONE"
+validation_rules:
+  - "certified_le_trained: certified <= trained"
+  - "trained_le_enrolled: trained <= enrolled"
+  - "counts_non_negative: count >= 0"
+max_file_size_bytes: 52428800 # 50 MB

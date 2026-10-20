@@ -1,0 +1,62 @@
+[
+  {
+    "survey_round": "PLFS-2023-24-FIXTURE",
+    "year": 2024,
+    "state": "Maharashtra",
+    "state_code": "IN-MH",
+    "sector": "RURAL+URBAN",
+    "lfpr": 56.4,
+    "wpr": 54.2,
+    "unemployment_rate": 3.9,
+    "share_agriculture": 42.1,
+    "share_industry": 23.5,
+    "share_services": 34.4,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: Deterministic benchmark test record, not official published census"
+  },
+  {
+    "survey_round": "PLFS-2023-24-FIXTURE",
+    "year": 2024,
+    "state": "Karnataka",
+    "state_code": "IN-KA",
+    "sector": "RURAL+URBAN",
+    "lfpr": 58.1,
+    "wpr": 56.5,
+    "unemployment_rate": 2.8,
+    "share_agriculture": 39.8,
+    "share_industry": 21.2,
+    "share_services": 39.0,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: Deterministic benchmark test record, not official published census"
+  },
+  {
+    "survey_round": "PLFS-2023-24-FIXTURE",
+    "year": 2024,
+    "state": "Gujarat",
+    "state_code": "IN-GJ",
+    "sector": "RURAL+URBAN",
+    "lfpr": 60.2,
+    "wpr": 58.9,
+    "unemployment_rate": 2.2,
+    "share_agriculture": 41.5,
+    "share_industry": 30.1,
+    "share_services": 28.4,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: Deterministic benchmark test record, not official published census"
+  },
+  {
+    "survey_round": "PLFS-2023-24-FIXTURE",
+    "year": 2024,
+    "state": "Delhi",
+    "state_code": "IN-DL",
+    "sector": "URBAN",
+    "lfpr": 48.7,
+    "wpr": 44.5,
+    "unemployment_rate": 8.6,
+    "share_agriculture": 1.2,
+    "share_industry": 22.4,
+    "share_services": 76.4,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: Deterministic benchmark test record, not official published census"
+  }
+]

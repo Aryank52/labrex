@@ -1,0 +1,48 @@
+# LABREX Data Acquisition Manifest: NCS
+manifest_version: "2.0.0"
+source_id: "SRC-NCS-FEED"
+dataset_name: "National Career Service Job Vacancies"
+authority: "Ministry of Labour & Employment (MoLE), NCS Project"
+dataset_type: "REAL"
+official_url: "https://www.ncs.gov.in/"
+alternate_url: "https://data.gov.in/"
+retrieval_date: "2026-10-20"
+publication_version: "NCS-STATE-SECTOR-AGGREGATES"
+expected_format: "CSV"
+alternate_formats:
+  - "JSON"
+  - "XLSX"
+acquisition_targets:
+  state_sector_aggregates:
+    title: "State & Sector Vacancy Aggregates"
+    description: "Public batch extracts of active vacancies grouped by state, district, industry sector, and NCO group"
+    priority: "STATE_SECTOR_VACANCY_AGGREGATES_FIRST"
+    filename_patterns:
+      - "ncs_vacancies_*.*"
+      - "*ncs*vacanc*.*"
+      - "*ncs*sector*.*"
+      - "*ncs*state*.*"
+parser: "backend.app.services.data.adapters.ncs_adapter.NCSAdapter"
+parser_version: "1.0.0"
+destination:
+  bronze_table: "stg_raw_job_postings"
+  silver_table: "clean_job_vacancies"
+  gold_fact: "fact_job_demand"
+geographic_granularity: "DISTRICT"
+temporal_granularity: "MONTHLY_OR_CONTINUOUS"
+connection_modes:
+  - "NOT_CONFIGURED"
+  - "AVAILABLE"
+  - "RATE_LIMITED"
+  - "UNAVAILABLE"
+pii_level: "LOW_GUARDED"
+security_policy:
+  strip_employer_phone: true
+  strip_employer_email: true
+  block_candidate_profiles: true
+  enforce_aggregate_anonymity: true
+validation_rules:
+  - "active_postings_non_negative: value >= 0"
+  - "valid_district_id: true"
+  - "valid_date_key: true"
+max_file_size_bytes: 104857600 # 100 MB

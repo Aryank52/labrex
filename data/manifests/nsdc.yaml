@@ -1,0 +1,55 @@
+# LABREX Data Acquisition Manifest: NSDC Skill Directory
+manifest_version: "2.0.0"
+source_id: "SRC-NSDC-DIR"
+dataset_name: "NSDC Skill Directory & Training Center Catalog"
+authority: "National Skill Development Corporation (NSDC) & NCVET"
+dataset_type: "REAL"
+official_url: "https://nsdcindia.org/"
+alternate_url: "https://nqr.gov.in/"
+retrieval_date: "2026-10-20"
+publication_version: "NSDC-PUBLIC-REFERENCE-CATALOG"
+expected_format: "CSV"
+alternate_formats:
+  - "JSON"
+  - "XLSX"
+  - "PDF"
+acquisition_targets:
+  course_qualifications:
+    title: "National Qualification Register (NQR) Course References"
+    description: "Public course definitions, NSQF qualification levels (1-10), QP IDs, and sector councils"
+    filename_patterns:
+      - "*nqr*.*"
+      - "*qualification*.*"
+      - "*course*.*"
+  training_centres:
+    title: "Public Training Center Directory"
+    description: "Accredited training centres, PMKK facilities, geographic locations, and schemes"
+    filename_patterns:
+      - "*centre*.*"
+      - "*center*.*"
+      - "*nsdc*tc*.*"
+parser: "backend.app.services.data.adapters.nsdc_adapter.NSDCAdapter"
+parser_version: "1.0.0"
+destination:
+  bronze_table: "stg_raw_nsdc_directory"
+  silver_table: "clean_training_centres"
+  gold_dimension: "dim_training_center"
+geographic_granularity: "PINCODE_AND_DISTRICT"
+temporal_granularity: "QUARTERLY_ROSTER"
+pii_level: "NONE"
+extraction_schema:
+  - "center_id"
+  - "name"
+  - "district_id"
+  - "state_id"
+  - "pincode"
+  - "center_type" # PMKK, Private VTP, Government ITI, Polytechnic
+  - "accreditation_status"
+  - "latitude"
+  - "longitude"
+  - "active_job_roles"
+validation_rules:
+  - "valid_center_id: true"
+  - "valid_district_id: true"
+  - "valid_coordinates_if_present: -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0"
+max_file_size_bytes: 52428800 # 50 MB

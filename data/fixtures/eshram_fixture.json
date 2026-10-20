@@ -1,0 +1,54 @@
+[
+  {
+    "snapshot_date": "2024-09-30",
+    "state_code": "IN-MH",
+    "state_name": "Maharashtra",
+    "district_code": "IN-MH-PUN",
+    "district_name": "Pune",
+    "occupation_sector": "Automotive & Mechanical Assembly",
+    "worker_count": 84250,
+    "male_ratio": 0.78,
+    "female_ratio": 0.22,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: District aggregate mock record for testing data quality and ingestion pipeline"
+  },
+  {
+    "snapshot_date": "2024-09-30",
+    "state_code": "IN-MH",
+    "state_name": "Maharashtra",
+    "district_code": "IN-MH-PUN",
+    "district_name": "Pune",
+    "occupation_sector": "Building & Construction Workers",
+    "worker_count": 142100,
+    "male_ratio": 0.84,
+    "female_ratio": 0.16,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: District aggregate mock record for testing data quality and ingestion pipeline"
+  },
+  {
+    "snapshot_date": "2024-09-30",
+    "state_code": "IN-KA",
+    "state_name": "Karnataka",
+    "district_code": "IN-KA-BLU",
+    "district_name": "Bengaluru Urban",
+    "occupation_sector": "Transportation & Logistics Delivery",
+    "worker_count": 128900,
+    "male_ratio": 0.89,
+    "female_ratio": 0.11,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: District aggregate mock record for testing data quality and ingestion pipeline"
+  },
+  {
+    "snapshot_date": "2024-09-30",
+    "state_code": "IN-GJ",
+    "state_name": "Gujarat",
+    "district_code": "IN-GJ-AHM",
+    "district_name": "Ahmedabad",
+    "occupation_sector": "Textiles & Apparel",
+    "worker_count": 96400,
+    "male_ratio": 0.45,
+    "female_ratio": 0.55,
+    "dataset_type": "FIXTURE",
+    "note": "FIXTURE: District aggregate mock record for testing data quality and ingestion pipeline"
+  }
+]
