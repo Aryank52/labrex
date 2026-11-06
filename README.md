@@ -92,12 +92,13 @@ LABREX connects the complete intelligence chain:
 │   ├── package.json          # Frontend dependencies
 │   └── tsconfig.json         # TypeScript configuration
 ├── docs/                     # Authoritative engineering documentation
+│   ├── DOC_INDEX.md          # 📚 MASTER DOCUMENT INDEX — START HERE
 │   ├── PRD.md                # Product Requirements Document
 │   ├── TRD.md                # Technical Requirements Document
 │   ├── ARCHITECTURE.md       # System Architecture
 │   ├── API_SPEC.md           # API Specifications
 │   ├── THREAT_MODEL.md       # Security & Threat Model
-│   └── ...                   # Complete documentation suite
+│   └── ...                   # Complete documentation suite (31 docs)
 ├── scripts/                  # Utility and security automation
 │   └── secret_guard.py       # Pre-commit secret scanning engine
 ├── Dockerfile.backend        # Multi-stage production container for API
@@ -105,6 +106,8 @@ LABREX connects the complete intelligence chain:
 ├── docker-compose.yml        # Local orchestration manifest
 └── .env.example              # Centralized environment template
 ```
+
+> **📚 Documentation Navigation:** Start with [`docs/DOC_INDEX.md`](docs/DOC_INDEX.md) for the complete document map, precedence hierarchy, and role-based navigation. All 31 authoritative documents are indexed there with search keywords.
 
 ---
 

@@ -1,7 +1,7 @@
 # LABREX Machine-Readable Task Queue
 
-**Authority:** Master Directive Section 90  
-**States:** `TODO` | `READY` | `IN_PROGRESS` | `BLOCKED` | `REVIEW` | `FAILED` | `VERIFIED` | `DONE`  
+**Authority:** Master Directive Section 90
+**States:** `TODO` | `READY` | `IN_PROGRESS` | `BLOCKED` | `REVIEW` | `FAILED` | `VERIFIED` | `DONE`
 
 ---
 
@@ -13,7 +13,7 @@
 - **DESCRIPTION**: Run host discovery commands to determine Python, Node, Git, PostgreSQL, Docker, and MCP capabilities.
 - **FILES**: `docs/ENVIRONMENT_INVENTORY.md`
 - **ACCEPTANCE**: All runtimes, services, and paths discovered and documented without exposed credentials.
-- **TEST COMMANDS**: Direct environment inspection via PowerShell.
+- **TEST COMMANDs**: Direct environment inspection via PowerShell.
 - **RISK**: Low
 - **ESTIMATED COMPLEXITY**: Small
 - **STATUS**: DONE
@@ -91,7 +91,7 @@
 - **TEST COMMANDS**: Inspection of `docs/architecture/`.
 - **RISK**: Low
 - **ESTIMATED COMPLEXITY**: Medium
-- **STATUS**: READY
+- **STATUS**: DONE
 
 ---
 
@@ -106,7 +106,7 @@
 - **TEST COMMANDS**: File tree inspection and Python syntax check.
 - **RISK**: Low
 - **ESTIMATED COMPLEXITY**: Medium
-- **STATUS**: READY
+- **STATUS**: DONE
 
 ---
 
@@ -121,7 +121,7 @@
 - **TEST COMMANDS**: `python scripts/secret_guard.py`
 - **RISK**: Low
 - **ESTIMATED COMPLEXITY**: Small
-- **STATUS**: READY
+- **STATUS**: DONE
 
 ---
 
@@ -136,7 +136,7 @@
 - **TEST COMMANDS**: `git status`, `python scripts/secret_guard.py`, `pytest backend/tests/`
 - **RISK**: Low
 - **ESTIMATED COMPLEXITY**: Small
-- **STATUS**: READY
+- **STATUS**: DONE
 
 ---
 
@@ -151,7 +151,7 @@
 - **TEST COMMANDS**: Inspection of report.
 - **RISK**: Low
 - **ESTIMATED COMPLEXITY**: Small
-- **STATUS**: READY
+- **STATUS**: DONE
 
 ---
 
@@ -286,4 +286,109 @@
 - **TEST COMMANDS**: `pytest backend/tests/ -v`, `python scripts/secret_guard.py`
 - **RISK**: Medium
 - **ESTIMATED COMPLEXITY**: High
+- **STATUS**: DONE
+
+---
+
+### TASK-PHASE0-001
+- **TASK-ID**: TASK-PHASE0-001
+- **TITLE**: Create docs/ERROR_CATALOG.md with RFC 7807 error codes
+- **DOMAIN**: Governance / Documentation
+- **DEPENDENCIES**: TASK-003
+- **DESCRIPTION**: Define machine-readable error catalog with error_code, message, http_status, and category for all API errors referenced in backend/app/schemas/common.py.
+- **FILES**: `docs/ERROR_CATALOG.md`
+- **ACCEPTANCE**: Error catalog matches all error_code values used in backend; JSON-serializable format; ≥25 error codes defined.
+- **TEST COMMANDS**: `python -c "import yaml; print(len(yaml.safe_load(open('docs/ERROR_CATALOG.md'))['errors']))"`
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-PHASE0-002
+- **TASK-ID**: TASK-PHASE0-002
+- **TITLE**: Create docs/SCENARIO_ENGINE.md
+- **DOMAIN**: Architecture / Documentation
+- **DEPENDENCIES**: TASK-004
+- **DESCRIPTION**: Document scenario simulation engine: state machine, parameter schema, intervention types, result schema, reproducibility guarantees, and API contract.
+- **FILES**: `docs/SCENARIO_ENGINE.md`
+- **ACCEPTANCE**: Complete technical specification for Phase 11 Scenario Engine implementation.
+- **TEST COMMANDS**: Markdown inspection against ARCHITECTURE.md and APP_FLOW.md requirements.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-PHASE0-003
+- **TASK-ID**: TASK-PHASE0-003
+- **TITLE**: Create docs/DATA_DOWNLOAD_GUIDE.md
+- **DOMAIN**: Documentation / Operations
+- **DEPENDENCIES**: TASK-DATA-006
+- **DESCRIPTION**: Operator manual for downloading official datasets with step-by-step procedures, authentication requirements, file naming conventions, and validation checklists.
+- **FILES**: `docs/DATA_DOWNLOAD_GUIDE.md`
+- **ACCEPTANCE**: Covers all 7 core sources with exact URLs, login procedures, and checksum verification steps.
+- **TEST COMMANDS**: Markdown inspection.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Small
+- **STATUS**: DONE
+
+---
+
+### TASK-PHASE0-004
+- **TASK-ID**: TASK-PHASE0-004
+- **TITLE**: Create docs/INGESTION_ROADMAP.md
+- **DOMAIN**: Documentation / Operations
+- **DEPENDENCIES**: TASK-DATA-006
+- **DESCRIPTION**: Phased ingestion plan with dependencies, parallelization opportunities, rollback procedures, and milestone gates for Phase 4+ data ingestion.
+- **FILES**: `docs/INGESTION_ROADMAP.md`
+- **ACCEPTANCE**: Ordered sequence with gate criteria; identifies parallelizable vs sequential steps; documents rollback triggers.
+- **TEST COMMANDS**: Markdown inspection.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Small
+- **STATUS**: DONE
+
+---
+
+### TASK-PHASE0-005
+- **TASK-ID**: TASK-PHASE0-005
+- **TITLE**: Create docs/DATA_ACQUISITION_STATUS.md
+- **DOMAIN**: Documentation / Operations
+- **DEPENDENCIES**: TASK-DATA-007
+- **DESCRIPTION**: Track acquisition status for each source artifact: file, SHA-256, retrieval date, version, validation status, and notes.
+- **FILES**: `docs/DATA_ACQUISITION_STATUS.md`
+- **ACCEPTANCE**: Table with one row per acquired artifact; links to manifests; status enum (NOT_STARTED, DOWNLOADED, VALIDATED, QUARANTINED, INGESTED).
+- **TEST COMMANDS**: Markdown inspection.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Small
+- **STATUS**: DONE
+
+---
+
+### TASK-PHASE0-006
+- **TASK-ID**: TASK-PHASE0-006
+- **TITLE**: Create docs/NCO_VALIDATION_REPORT.md
+- **DOMAIN**: Data Engineering / Quality
+- **DEPENDENCIES**: TASK-DATA-004
+- **DESCRIPTION**: Validation evidence for NCO-2015 parser: code coverage, hierarchy integrity, description preservation, sector mapping accuracy, and fixture representativeness.
+- **FILES**: `docs/NCO_VALIDATION_REPORT.md`
+- **ACCEPTANCE**: Quantitative metrics: total codes parsed, hierarchy levels verified, sector mapping %, fixture coverage %.
+- **TEST COMMANDS**: Markdown inspection.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Medium
+- **STATUS**: DONE
+
+---
+
+### TASK-PHASE0-007
+- **TASK-ID**: TASK-PHASE0-007
+- **TITLE**: Create docs/DOC_INDEX.md and update README.md
+- **DOMAIN**: Governance / Documentation
+- **DEPENDENCIES**: TASK-PHASE0-001 through TASK-PHASE0-006
+- **DESCRIPTION**: Master documentation index with precedence hierarchy, document map, and navigation. Update README.md to link to DOC_INDEX.md.
+- **FILES**: `docs/DOC_INDEX.md`, `README.md`
+- **ACCEPTANCE**: DOC_INDEX.md lists all authoritative docs with precedence order; README.md has prominent link to DOC_INDEX.md.
+- **TEST COMMANDS**: `grep -c "DOC_INDEX" README.md` ≥ 1; `wc -l docs/DOC_INDEX.md` ≥ 50.
+- **RISK**: Low
+- **ESTIMATED COMPLEXITY**: Small
 - **STATUS**: DONE
